@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phishing URL Detector</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+
+        .header {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .header h1 { color: #667eea; font-size: 2.5rem; margin-bottom: 10px; }
+        .header p { color: #666; font-size: 1.1rem; }
+        .badge {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-top: 15px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .card h2 {
+            color: #333;
+            margin-bottom: 20px;
+            border-right: 4px solid #667eea;
+            padding-right: 15px;
+        }
+
+        .input-group { display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; }
+        .input-group input {
+            flex: 1;
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        .input-group input:focus { outline: none; border-color: #667eea; }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102,126,234,0.4);
+        }
+        .btn-secondary { background: #6c757d; color: white; }
+
+        .result-safe { background: linear-gradient(135deg, #00b09b, #96c93d); color: white; padding: 20px; border-radius: 15px; margin-top: 20px; text-align: center; }
+        .result-phishing { background: linear-gradient(135deg, #eb3349, #f45c43); color: white; padding: 20px; border-radius: 15px; margin-top: 20px; text-align: center; }
+        .result-medium { background: linear-gradient(135deg, #f2994a, #f2c94c); color: white; padding: 20px; border-radius: 15px; margin-top: 20px; text-align: center; }
+
+        .result-stats { display: flex; justify-content: space-around; margin-top: 20px; flex-wrap: wrap; gap: 15px; }
+        .stat-card { background: #f8f9fa; padding: 15px; border-radius: 10px; text-align: center; flex: 1; min-width: 120px; }
+        .stat-card h3 { color: #667eea; font-size: 1.5rem; }
+        .stat-card p { color: #666; font-size: 0.9rem; }
+
+        .history-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .history-table th, .history-table td { padding: 12px; text-align: left; border-bottom: 1px solid #e0e0e0; }
+        .history-table th { background: #f8f9fa; color: #667eea; }
+
+        .status-safe { color: #28a745; font-weight: bold; }
+        .status-phishing { color: #dc3545; font-weight: bold; }
+
+        .loading { display: none; text-align: center; padding: 20px; }
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .error { background: #f8d7da; color: #721c24; padding: 15px; border-radius: 10px; margin-top: 20px; border-right: 4px solid #dc3545; }
+
+        .footer { text-align: center; padding: 20px; color: white; opacity: 0.8; }
+
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #e0e0e0; }
+        .tab { padding: 10px 20px; cursor: pointer; border: none; background: none; font-size: 1rem; transition: all 0.3s; }
+        .tab.active { color: #667eea; border-bottom: 2px solid #667eea; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: monospace;
+            resize: vertical;
+        }
+        textarea:focus { outline: none; border-color: #667eea; }
+
+        @media (max-width: 768px) {
+            .input-group { flex-direction: column; }
+            .result-stats { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛡️ Phishing URL Detector</h1>
+            <p>Smart system to protect you from phishing sites</p>
+            <div class="badge">✨ Accuracy up to 98.5% | AI powered</div>
+        </div>
+
+        <div class="card">
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab('single')">🔍 Single URL</button>
+                <button class="tab" onclick="switchTab('batch')">📦 Batch Check</button>
+                <button class="tab" onclick="switchTab('history')">📜 History</button>
+            </div>
+
+            <div id="single-tab" class="tab-content active">
+                <h2>🔍 Enter URL to check</h2>
+                <div class="input-group">
+                    <input type="text" id="url-input" placeholder="https://example.com">
+                    <button class="btn btn-primary" onclick="checkUrl()">🚀 Analyze</button>
+                </div>
+                <div id="single-result"></div>
+            </div>
+
+            <div id="batch-tab" class="tab-content">
+                <h2>📦 Check multiple URLs</h2>
+                <p style="color: #666; margin-bottom: 15px;">Enter one URL per line (max 20 URLs)</p>
+                <textarea id="batch-urls" rows="6" placeholder="https://example1.com&#10;https://example2.com&#10;https://ju.edu.jo"></textarea>
+                <div style="margin-top: 15px;">
+                    <button class="btn btn-primary" onclick="checkBatch()">🚀 Analyze Batch</button>
+                </div>
+                <div id="batch-result"></div>
+            </div>
+
+            <div id="history-tab" class="tab-content">
+                <h2>📜 Check History</h2>
+                <div id="history-content">
+                    <p style="color: #666; text-align: center;">No history yet. Analyze some URLs!</p>
+                </div>
+                <div style="margin-top: 15px;">
+                    <button class="btn btn-secondary" onclick="clearHistory()">🗑️ Clear History</button>
+                    <button class="btn btn-secondary" onclick="exportHistory()">📥 Export CSV</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>🛡️ Phishing URL Detector | Version 2.0 | Auto official domain detection</p>
+            <p style="font-size: 0.8rem;">⚠️ For educational and security purposes only</p>
+        </div>
+    </div>
+
+    <script>
+        let history = JSON.parse(localStorage.getItem('phishing_history') || '[]');
+
+        function updateHistoryDisplay() {
+            const historyDiv = document.getElementById('history-content');
+            if (history.length === 0) {
+                historyDiv.innerHTML = '<p style="color: #666; text-align: center;">No history yet. Analyze some URLs!</p>';
+                return;
+            }
+            let html = '<table class="history-table"><thead><tr>';
+            html += '<th>URL</th><th>Status</th><th>Probability</th><th>Risk Level</th><th>Date</th>';
+            html += '</tr></thead><tbody>';
+            history.slice().reverse().slice(0,20).forEach(item => {
+                const statusClass = item.is_phishing ? 'status-phishing' : 'status-safe';
+                const statusText = item.is_phishing ? '🚨 Phishing' : '✅ Safe';
+                const riskText = item.risk_level === 'high' ? 'High' : (item.risk_level === 'medium' ? 'Medium' : 'Low');
+                html += `<tr>
+                    <td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis;">${item.url}</td>
+                    <td class="${statusClass}">${statusText}</td>
+                    <td>${(item.probability*100).toFixed(1)}%</td>
+                    <td>${riskText}</td>
+                    <td>${item.timestamp}</td>
+                </tr>`;
+            });
+            html += '</tbody></table>';
+            historyDiv.innerHTML = html;
+        }
+
+        function addToHistory(url, is_phishing, probability, risk_level) {
+            const item = { url, is_phishing, probability, risk_level, timestamp: new Date().toLocaleString() };
+            history.unshift(item);
+            if(history.length>100) history.pop();
+            localStorage.setItem('phishing_history', JSON.stringify(history));
+            updateHistoryDisplay();
+        }
+
+        function clearHistory() {
+            if(confirm('Are you sure you want to clear all history?')) {
+                history=[];
+                localStorage.setItem('phishing_history','[]');
+                updateHistoryDisplay();
+            }
+        }
+
+        function exportHistory() {
+            if(history.length===0){ alert('No data to export!'); return; }
+            let csv = 'URL,Status,Probability,Risk Level,Date\n';
+            history.forEach(item=>{
+                csv+= `"${item.url}",${item.is_phishing?'Phishing':'Safe'},${(item.probability*100).toFixed(1)}%,${item.risk_level},${item.timestamp}\n`;
+            });
+            const blob = new Blob([csv], {type:'text/csv'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href=url;
+            a.download=`phishing_history_${new Date().toISOString().slice(0,19)}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function displayResult(result, containerId){
+            const container = document.getElementById(containerId);
+            const isPhishing = result.is_phishing;
+            const probability = result.probability;
+            const confidence = result.confidence;
+            const riskLevel = result.risk_level;
+            let html='';
+            if(isPhishing){
+                html+=`<div class="result-phishing"><h2>🚨 Warning! Potential phishing</h2><p>Probability: ${(probability*100).toFixed(1)}%</p><p>Confidence: ${confidence.toFixed(1)}%</p><p>⚠️ Do not enter personal information!</p></div>`;
+            } else if(riskLevel==='medium'){
+                html+=`<div class="result-medium"><h2>⚠️ Alert! Medium risk</h2><p>Probability: ${(probability*100).toFixed(1)}%</p><p>Confidence: ${confidence.toFixed(1)}%</p><p>⚠️ Be cautious when using this site</p></div>`;
+            } else {
+                html+=`<div class="result-safe"><h2>✅ Safe! No risk detected</h2><p>Probability: ${(probability*100).toFixed(1)}%</p><p>Confidence: ${confidence.toFixed(1)}%</p><p>✓ This site appears safe</p></div>`;
+            }
+            if(result.features_summary){
+                html+=`<div class="result-stats">
+                    <div class="stat-card"><h3>${result.features_summary.url_length||0}</h3><p>URL Length</p></div>
+                    <div class="stat-card"><h3>${result.features_summary.has_https?'✅':'❌'}</h3><p>HTTPS</p></div>
+                    <div class="stat-card"><h3>${result.features_summary.sensitive_words||0}</h3><p>Sensitive Words</p></div>
+                    <div class="stat-card"><h3>${result.detection_method||'N/A'}</h3><p>Detection Method</p></div>
+                </div>`;
+            }
+            if(result.message){
+                html+=`<div class="info" style="background:#e8f4fd;padding:15px;border-radius:10px;margin-top:15px;">💡 ${result.message}</div>`;
+            }
+            container.innerHTML=html;
+        }
+
+        async function checkUrl(){
+            const url=document.getElementById('url-input').value.trim();
+            if(!url){ alert('Please enter a URL'); return; }
+            const resultDiv=document.getElementById('single-result');
+            resultDiv.innerHTML='<div class="loading"><div class="spinner"></div><p>Analyzing...</p></div>';
+            try{
+                const response=await fetch('/api/v1/check',{method:'POST',headers:{'Content-Type':'application/json','X-API-Key':'test_key_123'},body:JSON.stringify({url:url})});
+                const data=await response.json();
+                if(response.ok){ displayResult(data,'single-result'); addToHistory(url,data.is_phishing,data.probability,data.risk_level); }
+                else{ resultDiv.innerHTML=`<div class="error">❌ Error: ${data.error||'Unexpected error'}</div>`;}
+            }catch(error){
+                resultDiv.innerHTML=`<div class="error">❌ Connection error: ${error.message}<br>Make sure server is running (python app.py)</div>`;
+            }
+        }
+
+        async function checkBatch(){
+            const urlsText=document.getElementById('batch-urls').value;
+            const urls=urlsText.split('\n').filter(u=>u.trim()).slice(0,20);
+            if(urls.length===0){ alert('Please enter URLs'); return; }
+            const resultDiv=document.getElementById('batch-result');
+            resultDiv.innerHTML='<div class="loading"><div class="spinner"></div><p>Analyzing...</p></div>';
+            try{
+                const response=await fetch('/api/v1/batch',{method:'POST',headers:{'Content-Type':'application/json','X-API-Key':'test_key_123'},body:JSON.stringify({urls:urls})});
+                const data=await response.json();
+                if(response.ok){
+                    let html='<h3>Analysis Results:</h3><table class="history-table"><thead><tr><th>URL</th><th>Status</th><th>Probability</th><th>Risk Level</th></tr></thead><tbody>';
+                    data.results.forEach(result=>{
+                        const statusClass=result.is_phishing?'status-phishing':'status-safe';
+                        const statusText=result.is_phishing?'🚨 Phishing':'✅ Safe';
+                        const riskText=result.risk_level==='high'?'High':(result.risk_level==='medium'?'Medium':'Low');
+                        html+=`<tr><td style="max-width:400px; overflow:hidden; text-overflow:ellipsis;">${result.url}</td><td class="${statusClass}">${statusText}</td><td>${(result.probability*100).toFixed(1)}%</td><td>${riskText}</td></tr>`;
+                        addToHistory(result.url,result.is_phishing,result.probability,result.risk_level);
+                    });
+                    html+='</tbody></table>';
+                    const phishingCount=data.results.filter(r=>r.is_phishing).length;
+                    html+=`<p style="margin-top:15px;padding:10px;background:#e8f4fd;border-radius:10px;">✅ Batch completed! Found ${phishingCount} phishing URLs out of ${data.results.length}</p>`;
+                    resultDiv.innerHTML=html;
+                }else{ resultDiv.innerHTML=`<div class="error">❌ Error: ${data.error||'Unexpected error'}</div>`; }
+            }catch(error){ resultDiv.innerHTML=`<div class="error">❌ Connection error: ${error.message}</div>`; }
+        }
+
+        function switchTab(tab){
+            document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+            document.querySelector(`.tab[onclick="switchTab('${tab}')"]`).classList.add('active');
+            document.getElementById(tab+'-tab').classList.add('active');
+        }
+
+        updateHistoryDisplay();
+    </script>
+</body>
+</html>
