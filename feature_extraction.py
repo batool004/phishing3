@@ -4,7 +4,6 @@ HTML Feature Extractor for Phishing Detection
 
 import re
 from urllib.parse import urlparse
-import tldextract
 
 class HTMLFeatureExtractor:
     def __init__(self):
@@ -117,3 +116,4 @@ class HTMLFeatureExtractor:
             print(f"Features: {features}")
             return features
         return None
+    

@@ -1,4 +1,4 @@
-# intelligent_analyzer.py - Enhanced version with TF-IDF support
+# intelligent_analyzer.py - Enhanced version with TF-IDF + Typosquatting Detection
 
 import difflib
 import re
@@ -7,10 +7,13 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 import joblib
 import os
 
-# List of trusted domains
+# ============= LISTS FOR DETECTION =============
+
+# List of trusted domains (for similarity detection)
 TRUSTED_DOMAINS = [
     'google.com', 'facebook.com', 'youtube.com', 'amazon.com',
-    'microsoft.com', 'apple.com', 'paypal.com', 'github.com'
+    'microsoft.com', 'apple.com', 'paypal.com', 'github.com',
+    'roblox.com', 'twitter.com', 'instagram.com', 'linkedin.com'
 ]
 
 # Suspicious keywords
@@ -19,6 +22,29 @@ SUSPICIOUS_WORDS = [
     'bank', 'paypal', 'signin', 'authenticate', 'validate'
 ]
 
+# ============= TYPOSQUATTING DETECTION FUNCTIONS =============
+
+def extract_domain_from_url(url):
+    """Extract domain name from URL"""
+    parsed = urlparse(url)
+    domain = parsed.netloc.lower()
+    if domain.startswith('www.'):
+        domain = domain[4:]
+    return domain
+
+def detect_typosquatting(domain):
+    """
+    Detect if a domain is impersonating a trusted domain (typosquatting)
+    Returns: (is_suspicious, similar_to, similarity_percentage)
+    """
+    for trusted in TRUSTED_DOMAINS:
+        ratio = difflib.SequenceMatcher(None, domain, trusted).ratio()
+        if ratio > 0.85 and ratio < 1.0:
+            return True, trusted, round(ratio * 100, 1)
+    return False, None, 0
+
+
+# ============= MAIN ANALYZER CLASS =============
 
 class IntelligentAnalyzer:
     def __init__(self):
@@ -68,6 +94,14 @@ class IntelligentAnalyzer:
         score = 0
         reasons = []
 
+        # Check for typosquatting FIRST (most important)
+        domain = extract_domain_from_url(url)
+        is_typo, similar_to, similarity = detect_typosquatting(domain)
+        
+        if is_typo:
+            score += 45  # High score for typosquatting
+            reasons.append(f"⚠️ Domain impersonates '{similar_to}' ({similarity}% match) - typosquatting detected!")
+
         # HTTPS check
         if not url.startswith('https'):
             score += 25
@@ -85,22 +119,41 @@ class IntelligentAnalyzer:
                 reasons.append(f'Contains suspicious keyword: "{word}"')
                 break
 
-        # Domain similarity
-        similar = self.detect_similar_domain(url)
-        if similar['is_suspicious']:
-            score += 35
-            reasons.append(similar['warning'])
+        # Domain similarity (fallback if typosquatting didn't catch it)
+        if not is_typo:
+            similar = self.detect_similar_domain(url)
+            if similar['is_suspicious']:
+                score += 35
+                reasons.append(similar['warning'])
 
         return min(score, 100), reasons
 
     def analyze_url(self, url):
-        """Full intelligent analysis (includes TF-IDF if available)"""
-        # Base analysis
+        """Full intelligent analysis with typosquatting detection"""
+        
+        # Check typosquatting FIRST
+        domain = extract_domain_from_url(url)
+        is_typo, similar_to, similarity = detect_typosquatting(domain)
+        
+        if is_typo:
+            return {
+                'url': url,
+                'score': 95,
+                'result': 'phishing',
+                'severity': 'critical',
+                'summary': f'⚠️ This URL impersonates {similar_to} (typosquatting detected!)',
+                'recommendation': '🚫 Do NOT open this URL',
+                'risk_factors': [f'Domain looks similar to {similar_to} ({similarity}% match) - typosquatting attack'],
+                'needs_deep_scan': True,
+                'similar_domain': {'is_suspicious': True, 'similar_to': similar_to, 'similarity': f'{similarity}%'}
+            }
+        
+        # Original analysis continues
         suspicion_score, risk_factors = self.get_suspicious_score(url)
 
         # Add TF-IDF contribution if available
         tfidf_features = self.get_tfidf_features(url)
-        if tfidf_features is not None and len(tfidf_features) > 0:
+        if tfidf_features and len(tfidf_features) > 0:
             tfidf_score = sum(tfidf_features) * 10
             suspicion_score = min(suspicion_score + tfidf_score, 100)
 
@@ -139,5 +192,5 @@ class IntelligentAnalyzer:
         }
 
 
-# Ready-to-use analyzer instance
+# ============= READY-TO-USE ANALYZER INSTANCE =============
 analyzer = IntelligentAnalyzer()

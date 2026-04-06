@@ -1,0 +1,83 @@
+2026-04-04 14:08:20,503 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/getMe "HTTP/1.1 200 OK"
+2026-04-04 14:08:20,585 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/deleteWebhook "HTTP/1.1 200 OK"
+2026-04-04 14:08:20,586 - INFO - Application started
+2026-04-04 14:08:30,824 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/getUpdates "HTTP/1.1 200 OK"
+2026-04-04 14:08:40,901 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/getUpdates "HTTP/1.1 200 OK"
+2026-04-04 14:08:50,987 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/getUpdates "HTTP/1.1 200 OK"
+2026-04-04 14:09:01,075 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/getUpdates "HTTP/1.1 200 OK"
+2026-04-04 14:09:07,671 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/getUpdates "HTTP/1.1 200 OK"
+2026-04-04 14:09:07,973 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/sendMessage "HTTP/1.1 200 OK"
+2026-04-04 14:09:17,759 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/getUpdates "HTTP/1.1 200 OK"
+2026-04-04 14:09:27,842 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/getUpdates "HTTP/1.1 200 OK"
+2026-04-04 14:09:28,858 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/getUpdates "HTTP/1.1 200 OK"
+2026-04-04 14:09:28,860 - ERROR - No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "C:\Users\batoo\Documents\GitHub\phishing-login-detector\phishing3\.venv\lib\site-packages\telegram\ext\_application.py", line 1315, in process_update
+    await coroutine
+  File "C:\Users\batoo\Documents\GitHub\phishing-login-detector\phishing3\.venv\lib\site-packages\telegram\ext\_handlers\basehandler.py", line 159, in handle_update
+    return await self.callback(update, context)
+  File "C:\Users\batoo\Documents\GitHub\phishing-login-detector\phishing3\telegram_bot.py", line 50, in check_url
+    url = update.message.text.strip()
+AttributeError: 'NoneType' object has no attribute 'text'
+2026-04-04 14:09:38,939 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/getUpdates "HTTP/1.1 200 OK"
+2026-04-04 14:09:49,015 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/getUpdates "HTTP/1.1 200 OK"
+2026-04-04 14:09:53,141 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/getUpdates "HTTP/1.1 200 OK"
+2026-04-04 14:09:53,409 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/sendMessage "HTTP/1.1 200 OK"
+2026-04-04 14:09:55,596 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/editMessageText "HTTP/1.1 400 Bad Request"
+2026-04-04 14:09:55,597 - ERROR - Error during URL check: Can't parse entities: character '.' is reserved and must be escaped with the preceding '\'
+2026-04-04 14:09:55,806 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/editMessageText "HTTP/1.1 200 OK"
+2026-04-04 14:10:03,229 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/getUpdates "HTTP/1.1 200 OK"
+2026-04-04 14:10:13,307 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/getUpdates "HTTP/1.1 200 OK"
+2026-04-04 14:10:23,397 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/getUpdates "HTTP/1.1 200 OK"
+2026-04-04 14:10:33,471 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/getUpdates "HTTP/1.1 200 OK"
+2026-04-04 14:10:43,551 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/getUpdates "HTTP/1.1 200 OK"
+2026-04-04 14:10:53,633 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/getUpdates "HTTP/1.1 200 OK"
+2026-04-04 14:10:58,327 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/getUpdates "HTTP/1.1 200 OK"
+2026-04-04 14:10:58,334 - INFO - Application is stopping. This might take a moment.
+2026-04-04 14:10:58,334 - INFO - Application.stop() complete
+2026-04-04 14:12:30,254 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/getMe "HTTP/1.1 200 OK"
+2026-04-04 14:12:30,332 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/deleteWebhook "HTTP/1.1 200 OK"
+2026-04-04 14:12:30,332 - INFO - Application started
+2026-04-04 14:12:40,554 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/getUpdates "HTTP/1.1 200 OK"
+2026-04-04 14:12:50,629 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/getUpdates "HTTP/1.1 200 OK"
+2026-04-04 14:13:00,704 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/getUpdates "HTTP/1.1 200 OK"
+2026-04-04 14:13:10,778 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/getUpdates "HTTP/1.1 200 OK"
+2026-04-04 14:13:20,852 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/getUpdates "HTTP/1.1 200 OK"
+2026-04-04 14:13:30,927 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/getUpdates "HTTP/1.1 200 OK"
+2026-04-04 14:13:41,008 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/getUpdates "HTTP/1.1 200 OK"
+2026-04-04 14:13:51,085 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/getUpdates "HTTP/1.1 200 OK"
+2026-04-04 14:14:01,158 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/getUpdates "HTTP/1.1 200 OK"
+2026-04-04 14:14:09,427 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/getUpdates "HTTP/1.1 200 OK"
+2026-04-04 14:14:09,726 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/sendMessage "HTTP/1.1 200 OK"
+2026-04-04 14:14:11,888 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/editMessageText "HTTP/1.1 400 Bad Request"
+2026-04-04 14:14:11,889 - ERROR - Unexpected error: Can't parse entities: character '.' is reserved and must be escaped with the preceding '\'
+2026-04-04 14:14:11,979 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/editMessageText "HTTP/1.1 200 OK"
+2026-04-04 14:14:19,508 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/getUpdates "HTTP/1.1 200 OK"
+2026-04-04 14:14:29,576 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/getUpdates "HTTP/1.1 200 OK"
+2026-04-04 14:14:39,657 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/getUpdates "HTTP/1.1 200 OK"
+2026-04-04 14:14:49,729 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/getUpdates "HTTP/1.1 200 OK"
+2026-04-04 14:14:59,793 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/getUpdates "HTTP/1.1 200 OK"
+2026-04-04 14:15:09,878 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/getUpdates "HTTP/1.1 200 OK"
+2026-04-04 14:15:19,944 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/getUpdates "HTTP/1.1 200 OK"
+2026-04-04 14:15:30,014 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/getUpdates "HTTP/1.1 200 OK"
+2026-04-04 14:15:40,103 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/getUpdates "HTTP/1.1 200 OK"
+2026-04-04 14:15:50,177 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/getUpdates "HTTP/1.1 200 OK"
+2026-04-04 14:16:00,251 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/getUpdates "HTTP/1.1 200 OK"
+2026-04-04 14:16:10,817 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/getUpdates "HTTP/1.1 200 OK"
+2026-04-04 14:16:20,890 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/getUpdates "HTTP/1.1 200 OK"
+2026-04-04 14:16:30,960 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/getUpdates "HTTP/1.1 200 OK"
+2026-04-04 14:16:41,036 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/getUpdates "HTTP/1.1 200 OK"
+2026-04-04 14:16:51,106 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/getUpdates "HTTP/1.1 200 OK"
+2026-04-04 14:17:01,190 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/getUpdates "HTTP/1.1 200 OK"
+2026-04-04 14:17:11,264 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/getUpdates "HTTP/1.1 200 OK"
+2026-04-04 14:17:21,341 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/getUpdates "HTTP/1.1 200 OK"
+2026-04-04 14:17:31,411 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/getUpdates "HTTP/1.1 200 OK"
+2026-04-04 14:17:41,481 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/getUpdates "HTTP/1.1 200 OK"
+2026-04-04 14:17:51,561 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/getUpdates "HTTP/1.1 200 OK"
+2026-04-04 14:18:01,636 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/getUpdates "HTTP/1.1 200 OK"
+2026-04-04 14:18:11,714 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/getUpdates "HTTP/1.1 200 OK"
+2026-04-04 14:18:21,777 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/getUpdates "HTTP/1.1 200 OK"
+2026-04-04 14:18:31,860 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/getUpdates "HTTP/1.1 200 OK"
+2026-04-04 14:18:39,439 - INFO - HTTP Request: POST https://api.telegram.org/bot8781348498:AAHiHKxC_nmO39Kslm4QsM4jmF_qVnSfikc/getUpdates "HTTP/1.1 200 OK"
+2026-04-04 14:18:39,455 - INFO - Application is stopping. This might take a moment.
+2026-04-04 14:18:39,455 - INFO - Application.stop() complete
