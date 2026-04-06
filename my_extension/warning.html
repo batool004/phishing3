@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚠️ Security Warning - CyberGuard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0f2a 0%, #0f1a3a 50%, #0a0f2a 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        /* Animated background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0, 255, 136, 0.03) 2px,
+                rgba(0, 255, 136, 0.03) 4px
+            );
+            pointer-events: none;
+        }
+
+        .warning-card {
+            position: relative;
+            z-index: 1;
+            background: rgba(10, 15, 42, 0.95);
+            backdrop-filter: blur(12px);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 71, 87, 0.4);
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.5), 0 0 30px rgba(255, 71, 87, 0.3);
+            padding: 40px;
+            width: 100%;
+            max-width: 550px;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .warning-icon {
+            text-align: center;
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        h1 {
+            color: #ff4757;
+            font-size: 28px;
+            text-align: center;
+            margin-bottom: 10px;
+            font-weight: 800;
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        .danger-url {
+            background: rgba(255, 71, 87, 0.1);
+            border: 1px solid rgba(255, 71, 87, 0.3);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            word-break: break-all;
+            font-family: monospace;
+            font-size: 12px;
+            color: #ff4757;
+        }
+
+        .reason-box {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-left: 3px solid #ff4757;
+        }
+
+        .reason-title {
+            color: #ff4757;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .reason-text {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .stats-box {
+            display: flex;
+            justify-content: space-around;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 25px;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            text-align: center;
+            flex: 1;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: 800;
+            color: #ff4757;
+        }
+
+        .stat-label {
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 5px;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            font-family: inherit;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ff4757, #c0392b);
+            color: white;
+            box-shadow: 0 0 15px rgba(255, 71, 87, 0.3);
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 25px rgba(255, 71, 87, 0.5);
+        }
+
+        .btn-warning {
+            background: rgba(255, 184, 0, 0.2);
+            border: 1px solid rgba(255, 184, 0, 0.5);
+            color: #ffb800;
+        }
+
+        .btn-warning:hover {
+            background: rgba(255, 184, 0, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        @media (max-width: 500px) {
+            .warning-card {
+                padding: 25px;
+            }
+            .buttons {
+                flex-direction: column;
+            }
+            h1 {
+                font-size: 22px;
+            }
+            .warning-icon {
+                font-size: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+
+    <div class="warning-card">
+        <div class="warning-icon">⚠️🚫</div>
+        <h1>SECURITY WARNING!</h1>
+        <div class="subtitle">This website has been blocked for your protection</div>
+
+        <div class="danger-url" id="dangerUrl">Loading...</div>
+
+        <div class="reason-box">
+            <div class="reason-title">🚨 WHY THIS WAS BLOCKED</div>
+            <div class="reason-text" id="reasonText">This URL was detected as a potential phishing site attempting to steal personal information.</div>
+        </div>
+
+        <div class="stats-box" id="statsBox">
+            <div class="stat">
+                <div class="stat-number" id="threatScore">-</div>
+                <div class="stat-label">THREAT SCORE</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number" id="reportsCount">-</div>
+                <div class="stat-label">USER REPORTS</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number" id="detectionSource">-</div>
+                <div class="stat-label">DETECTION SOURCE</div>
+            </div>
+        </div>
+
+        <div class="buttons">
+            <button class="btn btn-secondary" onclick="goBack()">🔙 GO BACK</button>
+            <button class="btn btn-warning" onclick="reportAndProceed()">📢 REPORT & PROCEED</button>
+            <button class="btn btn-danger" onclick="proceedAnyway()">⚠️ PROCEED ANYWAY</button>
+        </div>
+
+        <div class="footer">
+            <p>🛡️ CyberGuard | Real-time Phishing Protection</p>
+            <p style="font-size: 9px; margin-top: 5px;">Proceeding may put your personal information at risk</p>
+        </div>
+    </div>
+
+    <script>
+        // Get URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const dangerousUrl = decodeURIComponent(urlParams.get('url') || '');
+        const reason = decodeURIComponent(urlParams.get('reason') || '');
+
+        // Display the dangerous URL
+        const urlElement = document.getElementById('dangerUrl');
+        if (urlElement) {
+            urlElement.textContent = dangerousUrl || 'Unknown URL';
+        }
+
+        // Parse reason for threat data
+        let threatScore = '85+';
+        let reportsCount = 'Multiple';
+        let detectionSource = 'AI Model';
+
+        if (reason) {
+            const scoreMatch = reason.match(/(\d+)%/);
+            if (scoreMatch) threatScore = scoreMatch[1] + '%';
+            
+            if (reason.toLowerCase().includes('global')) {
+                detectionSource = 'Community';
+                const reportMatch = reason.match(/reported by (\d+)/i);
+                if (reportMatch) reportsCount = reportMatch[1];
+            }
+        }
+
+        document.getElementById('threatScore').textContent = threatScore;
+        document.getElementById('reportsCount').textContent = reportsCount;
+        document.getElementById('detectionSource').textContent = detectionSource;
+
+        if (reason) {
+            document.getElementById('reasonText').innerHTML = reason;
+        }
+
+        function goBack() {
+            window.history.back();
+        }
+
+        async function reportAndProceed() {
+            if (dangerousUrl) {
+                try {
+                    // Get user ID from storage
+                    const userId = await new Promise((resolve) => {
+                        chrome.storage.local.get(['userId'], (result) => {
+                            resolve(result.userId || 'anonymous');
+                        });
+                    });
+                    
+                    await fetch('http://localhost:5002/api/v2/report', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                            url: dangerousUrl, 
+                            user_id: userId,
+                            ml_score: parseInt(threatScore) || 85
+                        })
+                    });
+                    
+                    showToast('✅ Thank you for reporting! The community is now protected.');
+                } catch(e) {
+                    console.error('Report failed:', e);
+                }
+            }
+            proceedAnyway();
+        }
+
+        function proceedAnyway() {
+            if (dangerousUrl) {
+                window.location.href = dangerousUrl;
+            } else {
+                goBack();
+            }
+        }
+
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: #00d4aa;
+                color: #000;
+                padding: 10px 20px;
+                border-radius: 8px;
+                font-size: 12px;
+                font-weight: bold;
+                z-index: 1000;
+                animation: fadeInOut 2s ease-in-out;
+            `;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2000);
+        }
+
+        // Add warning before leaving if user proceeds
+        window.addEventListener('beforeunload', (e) => {
+            if (confirm('⚠️ This site may be dangerous! Are you sure you want to proceed?')) {
+                return;
+            }
+            e.preventDefault();
+            e.returnValue = '';
+        });
+    </script>
+</body>
+</html>
