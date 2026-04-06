@@ -235,14 +235,26 @@ chrome.webNavigation.onBeforeNavigate.addListener(async (details) => {
         });
 
         // If URL is dangerous (score > 70)
-        if (isPhishing || score > 70) {
+        if (isPhishing || score > 40) {
             console.log(`🚫 BLOCKED: ${url} (phishing detected, score: ${score}%)`);
 
             // Automatically add to blocked list
             addToBlockedList(domain);
 
-            // Block access and redirect to warning page
-            redirectToWarning(tabId, url, `Phishing detected! Threat score: ${score}%`);
+            // Prepare threat data for warning page
+            const threatData = {
+                score: score,
+                source: data.source || 'ml_model',
+                risk_factors: data.risk_factors || []
+            };
+
+            // Block access and redirect to warning page with threat data
+            redirectToWarning(
+                details.tabId,
+                url,
+                `Phishing detected! Threat score: ${score}%`,
+                threatData
+            );
 
             // Show notification
             chrome.notifications.create({
@@ -252,7 +264,7 @@ chrome.webNavigation.onBeforeNavigate.addListener(async (details) => {
                 message: `Phishing URL blocked: ${domain}\nScore: ${score}%`,
                 priority: 2
             });
-            
+
             // Ask user to report to global network (for score > 85)
             if (score > 85) {
                 askUserToReport(url, score);
@@ -268,14 +280,23 @@ chrome.webNavigation.onBeforeNavigate.addListener(async (details) => {
         console.error('Error checking URL:', error);
         // If API is down, don't block (false negative better than false positive)
     }
-
 }, { url: [{ schemes: ['http', 'https'] }] });
 
 // ============= Redirect to warning page =============
-function redirectToWarning(tabId, url, reason) {
-    const warningUrl = chrome.runtime.getURL('warning.html') +
+function redirectToWarning(tabId, url, reason, threatData = null) {
+    // Build URL with all parameters
+    let warningUrl = chrome.runtime.getURL('warning.html') +
         `?url=${encodeURIComponent(url)}&reason=${encodeURIComponent(reason)}`;
-
+    
+    // Add threat data if available
+    if (threatData) {
+        warningUrl += `&score=${encodeURIComponent(threatData.score || 0)}`;
+        warningUrl += `&source=${encodeURIComponent(threatData.source || 'ml_model')}`;
+        if (threatData.risk_factors) {
+            warningUrl += `&risks=${encodeURIComponent(JSON.stringify(threatData.risk_factors.slice(0, 3)))}`;
+        }
+    }
+    
     chrome.tabs.update(tabId, { url: warningUrl });
 }
 

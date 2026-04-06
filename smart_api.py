@@ -108,7 +108,7 @@ def smart_check():
             final_risks.append('⚠️ Page requests credit card information!')
     
     # 6. Determine final result
-    if final_score > 70 or (threat_check and threat_check.get('is_threat')):
+    if final_score > 40 or (threat_check and threat_check.get('is_threat')):
         prediction = 'phishing'
         final_recommendation = '🚫 Do not open this URL under any circumstances'
         icon = '⚠️🚫'

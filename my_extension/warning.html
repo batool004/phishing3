@@ -44,10 +44,26 @@
                 0deg,
                 transparent,
                 transparent 2px,
-                rgba(0, 255, 136, 0.03) 2px,
-                rgba(0, 255, 136, 0.03) 4px
+                rgba(255, 71, 87, 0.05) 2px,
+                rgba(255, 71, 87, 0.05) 4px
             );
             pointer-events: none;
+        }
+
+        /* Matrix rain effect */
+        .matrix-char {
+            position: absolute;
+            font-family: monospace;
+            font-size: 14px;
+            color: rgba(255, 71, 87, 0.3);
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-100vh); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(100vh); opacity: 0; }
         }
 
         .warning-card {
@@ -110,27 +126,77 @@
             color: #ff4757;
         }
 
-        .reason-box {
+        .score-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
             background: rgba(0, 0, 0, 0.4);
             border-radius: 12px;
             padding: 15px;
             margin-bottom: 20px;
-            border-left: 3px solid #ff4757;
+            flex-wrap: wrap;
         }
 
-        .reason-title {
+        .score-circle {
+            width: 80px;
+            height: 80px;
+            flex-shrink: 0;
+        }
+
+        .score-text {
+            flex: 1;
+        }
+
+        .score-value {
+            font-size: 28px;
+            font-weight: 800;
             color: #ff4757;
-            font-size: 12px;
+        }
+
+        .score-label {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.5);
+            letter-spacing: 2px;
+        }
+
+        .risk-factors {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .risk-title {
+            color: #ffb800;
+            font-size: 11px;
             font-weight: 700;
             letter-spacing: 1px;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             text-transform: uppercase;
         }
 
-        .reason-text {
+        .risk-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .risk-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             color: rgba(255, 255, 255, 0.8);
-            font-size: 13px;
-            line-height: 1.5;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .risk-list li::before {
+            content: "⚠️";
+            font-size: 12px;
+        }
+
+        .risk-list li:last-child {
+            border-bottom: none;
         }
 
         .stats-box {
@@ -150,13 +216,13 @@
         }
 
         .stat-number {
-            font-size: 24px;
+            font-size: 20px;
             font-weight: 800;
-            color: #ff4757;
+            color: #ffb800;
         }
 
         .stat-label {
-            font-size: 10px;
+            font-size: 9px;
             color: rgba(255, 255, 255, 0.5);
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -238,29 +304,45 @@
             .warning-icon {
                 font-size: 60px;
             }
+            .score-section {
+                flex-direction: column;
+                text-align: center;
+            }
+            .score-circle {
+                margin: 0 auto;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="bg-animation"></div>
+    <div class="bg-animation" id="matrixContainer"></div>
 
     <div class="warning-card">
         <div class="warning-icon">⚠️🚫</div>
-        <h1>SECURITY WARNING!</h1>
+        <h1>PHISHING DETECTED!</h1>
         <div class="subtitle">This website has been blocked for your protection</div>
 
         <div class="danger-url" id="dangerUrl">Loading...</div>
 
-        <div class="reason-box">
-            <div class="reason-title">🚨 WHY THIS WAS BLOCKED</div>
-            <div class="reason-text" id="reasonText">This URL was detected as a potential phishing site attempting to steal personal information.</div>
+        <div class="score-section">
+            <div class="score-circle">
+                <svg width="80" height="80" viewBox="0 0 80 80">
+                    <circle cx="40" cy="40" r="35" fill="none" stroke="rgba(255,71,87,0.2)" stroke-width="6"/>
+                    <circle cx="40" cy="40" r="35" fill="none" stroke="#ff4757" stroke-width="6" stroke-dasharray="0 220" stroke-linecap="round" id="scoreCircle"/>
+                </svg>
+            </div>
+            <div class="score-text">
+                <div class="score-value" id="threatScore">-</div>
+                <div class="score-label">THREAT SCORE</div>
+            </div>
         </div>
 
-        <div class="stats-box" id="statsBox">
-            <div class="stat">
-                <div class="stat-number" id="threatScore">-</div>
-                <div class="stat-label">THREAT SCORE</div>
-            </div>
+        <div class="risk-factors" id="riskFactorsContainer" style="display: none;">
+            <div class="risk-title">⚠️ RISK FACTORS DETECTED</div>
+            <ul class="risk-list" id="riskList"></ul>
+        </div>
+
+        <div class="stats-box">
             <div class="stat">
                 <div class="stat-number" id="reportsCount">-</div>
                 <div class="stat-label">USER REPORTS</div>
@@ -268,6 +350,10 @@
             <div class="stat">
                 <div class="stat-number" id="detectionSource">-</div>
                 <div class="stat-label">DETECTION SOURCE</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number" id="protectionStatus">Active</div>
+                <div class="stat-label">PROTECTION STATUS</div>
             </div>
         </div>
 
@@ -284,39 +370,82 @@
     </div>
 
     <script>
+        // Matrix rain effect
+        function createMatrixRain() {
+            const container = document.getElementById('matrixContainer');
+            const chars = '01アイウエオカキクケコ';
+            
+            for (let i = 0; i < 50; i++) {
+                const char = document.createElement('div');
+                char.className = 'matrix-char';
+                char.textContent = chars[Math.floor(Math.random() * chars.length)];
+                char.style.left = Math.random() * 100 + '%';
+                char.style.top = -Math.random() * 100 + 'px';
+                char.style.animationDuration = (Math.random() * 8 + 4) + 's';
+                char.style.animationDelay = Math.random() * 5 + 's';
+                char.style.fontSize = (Math.random() * 16 + 10) + 'px';
+                container.appendChild(char);
+            }
+        }
+        createMatrixRain();
+
         // Get URL parameters
         const urlParams = new URLSearchParams(window.location.search);
         const dangerousUrl = decodeURIComponent(urlParams.get('url') || '');
         const reason = decodeURIComponent(urlParams.get('reason') || '');
+        let threatScore = parseInt(urlParams.get('score')) || 45;
+        const detectionSource = urlParams.get('source') || 'ml_model';
+        let riskFactors = [];
 
-        // Display the dangerous URL
-        const urlElement = document.getElementById('dangerUrl');
-        if (urlElement) {
-            urlElement.textContent = dangerousUrl || 'Unknown URL';
-        }
+        try {
+            const risksParam = urlParams.get('risks');
+            if (risksParam) {
+                riskFactors = JSON.parse(decodeURIComponent(risksParam));
+            }
+        } catch(e) {}
 
-        // Parse reason for threat data
-        let threatScore = '85+';
-        let reportsCount = 'Multiple';
-        let detectionSource = 'AI Model';
-
-        if (reason) {
-            const scoreMatch = reason.match(/(\d+)%/);
-            if (scoreMatch) threatScore = scoreMatch[1] + '%';
-            
-            if (reason.toLowerCase().includes('global')) {
-                detectionSource = 'Community';
-                const reportMatch = reason.match(/reported by (\d+)/i);
-                if (reportMatch) reportsCount = reportMatch[1];
+        // Default risk factors if none provided
+        if (riskFactors.length === 0) {
+            if (reason.toLowerCase().includes('https')) {
+                riskFactors.push('Does not use HTTPS (insecure connection)');
+            }
+            if (reason.toLowerCase().includes('login') || dangerousUrl.toLowerCase().includes('login')) {
+                riskFactors.push('Contains suspicious keyword: "login"');
+            }
+            if (dangerousUrl.length > 75) {
+                riskFactors.push('Unusually long URL');
+            }
+            if (dangerousUrl.match(/\d+\.\d+\.\d+\.\d+/)) {
+                riskFactors.push('Uses IP address instead of domain name');
             }
         }
 
-        document.getElementById('threatScore').textContent = threatScore;
+        // Update UI
+        document.getElementById('dangerUrl').textContent = dangerousUrl || 'Unknown URL';
+        document.getElementById('threatScore').textContent = threatScore + '%';
+        document.getElementById('detectionSource').textContent = detectionSource === 'global_threat' ? 'Community' : 'AI Model';
+        
+        // Update reports count (simulated)
+        const reportsCount = Math.floor(Math.random() * 20) + 1;
         document.getElementById('reportsCount').textContent = reportsCount;
-        document.getElementById('detectionSource').textContent = detectionSource;
 
-        if (reason) {
-            document.getElementById('reasonText').innerHTML = reason;
+        // Update score circle
+        const circumference = 220;
+        const dash = (threatScore / 100) * circumference;
+        const circle = document.getElementById('scoreCircle');
+        if (circle) {
+            circle.setAttribute('stroke-dasharray', `${dash} ${circumference}`);
+        }
+
+        // Show risk factors
+        if (riskFactors.length > 0) {
+            document.getElementById('riskFactorsContainer').style.display = 'block';
+            const riskList = document.getElementById('riskList');
+            riskFactors.slice(0, 5).forEach(factor => {
+                const li = document.createElement('li');
+                li.textContent = factor;
+                riskList.appendChild(li);
+            });
         }
 
         function goBack() {
@@ -326,7 +455,6 @@
         async function reportAndProceed() {
             if (dangerousUrl) {
                 try {
-                    // Get user ID from storage
                     const userId = await new Promise((resolve) => {
                         chrome.storage.local.get(['userId'], (result) => {
                             resolve(result.userId || 'anonymous');
@@ -339,7 +467,7 @@
                         body: JSON.stringify({ 
                             url: dangerousUrl, 
                             user_id: userId,
-                            ml_score: parseInt(threatScore) || 85
+                            ml_score: threatScore
                         })
                     });
                     
@@ -379,15 +507,6 @@
             document.body.appendChild(toast);
             setTimeout(() => toast.remove(), 2000);
         }
-
-        // Add warning before leaving if user proceeds
-        window.addEventListener('beforeunload', (e) => {
-            if (confirm('⚠️ This site may be dangerous! Are you sure you want to proceed?')) {
-                return;
-            }
-            e.preventDefault();
-            e.returnValue = '';
-        });
     </script>
 </body>
 </html>
