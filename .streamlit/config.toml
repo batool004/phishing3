@@ -1,0 +1,6 @@
+
+[server]
+port = 5002
+headless = true
+enableCORS = false
+enableXsrfProtection = false

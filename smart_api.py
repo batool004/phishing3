@@ -1,5 +1,9 @@
 # smart_api.py - Intelligent API with background page analysis + Global Threat Network
+import os
+import sys
 
+# تأكيد أن المنفذ صحيح لـ Streamlit Cloud
+port = int(os.environ.get("PORT", 5002))
 from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 import joblib
@@ -309,3 +313,5 @@ if __name__ == '__main__':
     print("   - /api/v2/check - Check against global threats")
     print("   - /api/v2/recent-threats - View recent threats")
     app.run(debug=True, port=5002, threaded=True)
+if __name__ == '__main__':
+    app.run(debug=False, host='0.0.0.0', port=port)
